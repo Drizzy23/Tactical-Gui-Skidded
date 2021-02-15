@@ -1,0 +1,519 @@
+local library = loadstring(game:HttpGet("https://zypher.wtf/UI-Lib"))()
+ 
+local main = library:CreateMain({
+    projName = "UILib",
+    Resizable = true,
+    MinSize = UDim2.new(0,400,0,400),
+    MaxSize = UDim2.new(0,750,0,500),
+})
+ 
+-- Categorys
+local CreditsCategory = main:CreateCategory("Credits")
+ 
+local PlayerCategory = main:CreateCategory("Player")
+ 
+local ModCategory = main:CreateCategory("Mods")
+ 
+local BaseToolsCategory = main:CreateCategory("Base Tools")
+ 
+local DupeCategory = main:CreateCategory("Dupe")
+ 
+local TeleportCategory = main:CreateCategory("WayPoints")
+ 
+local CarToolsCategory = main:CreateCategory("Car Tools")
+ 
+local WoodToolsCategory = main:CreateCategory("Troll")
+ 
+local Blank = main:CreateCategory("")
+ 
+local Blank = main:CreateCategory("")
+ 
+local Blank = main:CreateCategory("")
+ 
+local SettingsCategory = main:CreateCategory("Settings")
+ 
+-- Player Sectors
+ 
+local MainScripter = CreditsCategory:CreateSection("Main Scripter - YoItsTactic#8977")
+ 
+local UILibaryDesigner = CreditsCategory:CreateSection("UI Libary Designer - xTheAlex14#3200")
+ 
+local UILibaryDesigner = CreditsCategory:CreateSection("Helpers - Ancestor#6969 And CynMod#7113")
+ 
+local Settings = SettingsCategory:CreateSection("Settings")
+ 
+local MiscTp = TeleportCategory:CreateSection("PlayerTP")
+ 
+local Speed = PlayerCategory:CreateSection("Humanoid")
+ 
+local ModMap = ModCategory:CreateSection("Mods")
+ 
+local CarTools = CarToolsCategory:CreateSection("Car Tools")
+ 
+local CarToolsb = CarToolsCategory:CreateSection("R To Rotate Car")
+ 
+local CarToolsb = CarToolsCategory:CreateSection("Z To Fly Car")
+ 
+local BaseTool = BaseToolsCategory:CreateSection("Base Tools")
+ 
+local AxeTools = DupeCategory:CreateSection("Axe Tools")
+ 
+local Troll = WoodToolsCategory:CreateSection("Troll")
+ 
+--Humanoid
+ 
+Speed:Create("Slider", "Walk Speed", function(Value)
+_G.speed = Value
+ 
+game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = _G.speed
+game.Players.LocalPlayer.Character.Humanoid:GetPropertyChangedSignal'WalkSpeed':Connect(function()
+game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = _G.speed
+end)
+ 
+end, {min = 16 ,default = 50, max = 600, suffix = " Speed", precise = false})
+ 
+Speed:Create("Slider", "JumpPower", function(Value)
+game:GetService("Players").LocalPlayer.Character.Humanoid.JumpPower = Value
+end, {min = 50,default = 50, max = 300, suffix = " Power", precise = false})
+ 
+Speed:Create("Slider", "Hip Height", function(Value)
+game:GetService("Players").LocalPlayer.Character.Humanoid.HipHeight = Value
+end, {min = 0, default = 0,max = 300, suffix = " Hieght", precise = true})
+ 
+ 
+Speed:Create("Slider", "Gravity", function(Value)
+game.Workspace.Gravity = Value
+end, {min = 0, max = 196.2, suffix = " Gravity", precise = false,default = 196.2})
+ 
+_G.jumpinf = false
+Speed:Create("Toggle", "Infinite Jump", function(State)
+_G.jumpinf = State
+end)
+ 
+game:GetService("UserInputService").JumpRequest:connect(function()
+if _G.jumpinf then
+game:GetService"Players".LocalPlayer.Character:FindFirstChildOfClass'Humanoid':ChangeState("Jumping")
+end
+end)
+ 
+ModMap:Create("Toggle", "WaterWalk", function(Value)
+ 
+ Workspace.Water.Water.CanCollide = Value
+ 
+end)
+ 
+ ModMap:Create("Toggle", "Remove (Water)", function(State)
+  for _,v in pairs(game.Workspace.Water:GetChildren()) do
+    if v.Name == "Water" then
+      if State then
+        v.Transparency = 1;
+      else
+        v.Transparency = 0;
+      end
+    end
+  end
+  end)
+ 
+  ModMap:Create("Toggle", "Remove (Lava)", function(State)
+  for i,v in pairs(game.Workspace.Region_Volcano:GetDescendants()) do
+    if v.Name == "TouchInterest" then
+      v:Destroy()
+    elseif v.Name == "Lava" then
+      for n,k in pairs(v:GetChildren()) do
+        if k:IsA("Part") then
+          if State == true then
+            k.Transparency = 1
+          else
+            k.Transparency = 0
+          end
+        end
+      end
+    end
+  end
+  end)
+ 
+ModMap:Create("Toggle", "Remove Fog", function(Value)
+_G.Checkbox = (Value) == true --or fasle
+                while _G.Checkbox do
+                game: service"RunService".RenderStepped:wait()
+                game.Lighting.FogEnd = 9999
+                end
+  end)
+ 
+ModMap:Create("Button", "Remove (Lava Boulders)", function()
+            local destroy = true
+ 
+    local boulders = workspace.Region_Volcano:FindFirstChild("PartSpawner")
+ 
+    while destroy == true do
+        for i, v in pairs(boulders:GetChildren()) do
+            v:Destroy()
+        end
+        wait(2)
+    end
+    end,
+    {animated = true,})
+ 
+    ModMap:Create("Button", "Remove (ShrineDoors)", function()
+ workspace.Region_Mountainside.BoulderRegen.Boulder:Destroy()
+    workspace.Region_Mountainside.Door.Door:Destroy()
+    end,
+    {animated = true,})
+ 
+    ModMap:Create("Button", "Remove (Snow Area Boulders)", function()
+    local boulders = workspace.Region_Snow:FindFirstChild("PartSpawner")
+ 
+            for i, v in pairs(boulders:GetChildren()) do
+            v:Destroy()
+        end
+    end,
+    {animated = true,})
+ 
+    function _G.Teleport1(XP,YP,ZP)
+-- Config How Many Blocks It Will Tp You Untill The Final Destination:
+local XTpEvery = 20
+local YTpEvery = 20
+local ZTpEvery = 20
+--Time to Tp Every:
+local Timer = 0.010
+--Script:
+local pos = game:GetService('Players').LocalPlayer.Character.HumanoidRootPart
+if pos.Position.X < XP then
+for x = pos.Position.X,XP,XTpEvery do
+game.Players.LocalPlayer.Character:MoveTo(Vector3.new(x,pos.Position.Y,pos.Position.Z))
+local part = Instance.new("Part", workspace)
+part.Anchored = true
+part.Size = Vector3.new(10,0.1,10)
+part.Material = "Glass"
+part.BrickColor = BrickColor.Random()
+part.Transparency = 1
+part.Position = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position + Vector3.new(0,-3.05,0)
+wait(Timer)
+part.Destroy(part)
+end
+else
+for x = pos.Position.X,XP,-XTpEvery do
+game.Players.LocalPlayer.Character:MoveTo(Vector3.new(x,pos.Position.Y,pos.Position.Z))
+local part = Instance.new("Part", workspace)
+part.Anchored = true
+part.Size = Vector3.new(10,0.1,10)
+part.Material = "Glass"
+part.BrickColor = BrickColor.Random()
+part.Transparency = 1
+part.Position = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position + Vector3.new(0,-3.05,0)
+wait(Timer)
+part.Destroy(part)
+end
+end
+if pos.Position.Z < ZP then
+for z = pos.Position.Z,ZP,ZTpEvery do
+game.Players.LocalPlayer.Character:MoveTo(Vector3.new(pos.Position.X,pos.Position.Y,z))
+local part = Instance.new("Part", workspace)
+part.Anchored = true
+part.Size = Vector3.new(10,0.1,10)
+part.Material = "Glass"
+part.BrickColor = BrickColor.Random()
+part.Transparency = 1
+part.Position = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position + Vector3.new(0,-3.05,0)
+wait(Timer)
+part.Destroy(part)
+end
+else
+for z = pos.Position.Z,ZP,-ZTpEvery do
+game.Players.LocalPlayer.Character:MoveTo(Vector3.new(pos.Position.X,pos.Position.Y,z))
+local part = Instance.new("Part", workspace)
+part.Anchored = true
+part.Size = Vector3.new(10,0.1,10)
+part.Material = "Glass"
+part.BrickColor = BrickColor.Random()
+part.Transparency = 1
+part.Position = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position + Vector3.new(0,-3.05,0)
+wait(Timer)
+part.Destroy(part)
+end
+end
+if pos.Position.Y < YP then
+for High = pos.Position.Y,YP,YTpEvery do
+game.Players.LocalPlayer.Character:MoveTo(Vector3.new(pos.Position.X ,High ,pos.Position.Z))
+local part = Instance.new("Part", workspace)
+part.Anchored = true
+part.Size = Vector3.new(10,0.1,10)
+part.Material = "Glass"
+part.BrickColor = BrickColor.Random()
+part.Transparency = 1
+part.Position = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position + Vector3.new(0,-3.05,0)
+wait(Timer)
+part.Destroy(part)
+end
+else
+for High = pos.Position.Y,YP,-YTpEvery do
+game.Players.LocalPlayer.Character:MoveTo(Vector3.new(pos.Position.X ,High ,pos.Position.Z))
+local part = Instance.new("Part", workspace)
+part.Anchored = true
+part.Size = Vector3.new(10,0.1,10)
+part.Material = "Glass"
+part.BrickColor = BrickColor.Random()
+part.Transparency = 1
+part.Position = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position + Vector3.new(0,-3.05,0)
+wait(Timer)
+part.Destroy(part)
+end
+end
+game.Players.LocalPlayer.Character:MoveTo(Vector3.new(XP,YP,ZP))
+end
+ 
+function  _G.Teleport2(cf)
+    game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame = cf
+    local BV = Instance.new("BodyVelocity")
+    BV.Parent = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+    BV.MaxForce = Vector3.new(9999999999999999999999999999999999999999999, 9999999999999999999999999999999999999999999, 9999999999999999999999999999999999999999999)
+    BV.Velocity = Vector3.new(0, 100, 0)
+    wait(0.1)
+    BV.Velocity = Vector3.new(0, 10, 0)
+    wait(0.05)
+    if BV then
+        BV:Destroy()
+    end 
+end
+ 
+ 
+function _G.Teleport(cf)
+    local plrc = game:service'Players'.LocalPlayer.Character
+    plrc.Humanoid:ChangeState(5)
+    local f = Instance.new("BodyPosition", plrc.Torso)
+    f.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+    f.Position = Vector3.new(0, 500000, 0)
+    wait(.12)
+    f:Destroy()
+    wait()
+    plrc.HumanoidRootPart.CFrame = cf
+    plrc.HumanoidRootPart.Velocity = Vector3.new(0,0,0)
+    plrc.HumanoidRootPart.RotVelocity = Vector3.new(0,0,0)
+    plrc.Humanoid:ChangeState(8)
+end
+ 
+Players2 = {}
+ 
+for i,v in next, game.Players:GetChildren() do
+table.insert(Players2, v.Name)
+end
+_G.SelectedPlayer = Players2[1];
+ 
+local U = MiscTp:Create("Dropdown", "Players", function(Option)
+_G.SelectedPlayer = Option
+end, {options = Players2})
+ 
+game.Players.PlayerRemoving:Connect(function(plrD)
+for i,v in next, Players2 do
+if v == plrD.Name then
+  U:RemoveOption(plrD.Name)
+  table.remove(Players2, i)
+end
+end
+end)
+ 
+game.Players.PlayerAdded:Connect(function(plrD)
+U:AddOption(plrD.Name)
+table.insert(Players2, plrD.Name)
+end)
+ 
+MiscTp:Create("Button", "Teleport To Bases", function()
+local Base
+for i, v in pairs(game.Workspace.Properties:GetChildren()) do
+    if  v.Owner.Value ~= nil and v.Owner.Value == game.Players[_G.SelectedPlayer] then
+        Base = v.OriginSquare.CFrame + Vector3.new(0,5,0)
+    end
+end
+ 
+_G.Teleport(CFrame.new(Base.X, Base.Y, Base.Z))
+ 
+end, {animated = true,})
+ 
+MiscTp:Create("Button", "Teleport To Player", function()
+local Plr
+Plr = game.Players[_G.SelectedPlayer].Character.HumanoidRootPart.CFrame
+if Plr ~= nil then
+_G.Teleport(CFrame.new(Plr.X, Plr.Y, Plr.Z))
+end
+end, {animated = true,})
+ 
+BaseTool:Create("Button", "Freeland", function()
+for a,b in pairs(workspace.Properties:GetChildren()) do 
+    if b:FindFirstChild("Owner") and b:FindFirstChild("OriginSquare") and b.Owner.Value == nil then 
+        game.ReplicatedStorage.PropertyPurchasing.ClientPurchasedProperty:FireServer(b, b.OriginSquare.OriginCFrame.Value.p + Vector3.new(0,3,0))
+ wait(0.5)
+        Instance.new('RemoteEvent', game:service'ReplicatedStorage'.Interaction).Name = "Ban"
+    for i,v in pairs(game.Workspace.Properties:GetChildren()) do
+        if v.Owner.Value == game.Players.LocalPlayer then
+    game.Players.LocalPlayer.Character.Humanoid.Jump = true
+    wait(0.1)
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.OriginSquare.CFrame + Vector3.new(0,10,0)
+    game.Players.LocalPlayer.Character.Humanoid.Jump = true
+    wait(0.1)
+        end
+    end
+ 
+  --     game.Players.LocalPlayer.Character:MoveTo(b.OriginSquare.Position)
+        break
+    end
+end
+notify("Freeland","You now have freeland")
+end, {animated = true,})
+ 
+BaseTool:Create("Button", "Maxland", function()
+for i, v in pairs(game:GetService("Workspace").Properties:GetChildren()) do
+        if v:FindFirstChild("Owner") and v.Owner.Value == game.Players.LocalPlayer then
+            base = v
+            square = v.OriginSquare
+            end
+        end
+    function makebase(pos)
+        local Event = game:GetService("ReplicatedStorage").PropertyPurchasing.ClientExpandedProperty
+        Event:FireServer(base, pos)
+        end
+    spos = square.Position
+    makebase(CFrame.new(spos.X + 40, spos.Y, spos.Z))
+    makebase(CFrame.new(spos.X - 40, spos.Y, spos.Z))
+    makebase(CFrame.new(spos.X, spos.Y, spos.Z + 40))
+    makebase(CFrame.new(spos.X, spos.Y, spos.Z - 40))
+    makebase(CFrame.new(spos.X + 40, spos.Y, spos.Z + 40))
+    makebase(CFrame.new(spos.X + 40, spos.Y, spos.Z - 40))
+    makebase(CFrame.new(spos.X - 40, spos.Y, spos.Z + 40))
+    makebase(CFrame.new(spos.X - 40, spos.Y, spos.Z - 40))
+    makebase(CFrame.new(spos.X + 80, spos.Y, spos.Z))
+    makebase(CFrame.new(spos.X - 80, spos.Y, spos.Z))
+    makebase(CFrame.new(spos.X, spos.Y, spos.Z + 80))
+    makebase(CFrame.new(spos.X, spos.Y, spos.Z - 80))
+--Corners--
+    makebase(CFrame.new(spos.X + 80, spos.Y, spos.Z + 80))
+    makebase(CFrame.new(spos.X + 80, spos.Y, spos.Z - 80))
+    makebase(CFrame.new(spos.X - 80, spos.Y, spos.Z + 80))
+    makebase(CFrame.new(spos.X - 80, spos.Y, spos.Z - 80))
+--Corners--
+    makebase(CFrame.new(spos.X + 40, spos.Y, spos.Z + 80))
+    makebase(CFrame.new(spos.X - 40, spos.Y, spos.Z + 80))
+    makebase(CFrame.new(spos.X + 80, spos.Y, spos.Z + 40))
+    makebase(CFrame.new(spos.X + 80, spos.Y, spos.Z - 40))
+    makebase(CFrame.new(spos.X - 80, spos.Y, spos.Z + 40))
+    makebase(CFrame.new(spos.X - 80, spos.Y, spos.Z - 40))
+    makebase(CFrame.new(spos.X + 40, spos.Y, spos.Z - 80))
+    makebase(CFrame.new(spos.X - 40, spos.Y, spos.Z - 80))
+notify("Max Land","now Active")
+end, {animated = true,})
+ 
+BaseTool:Create("Button", "Blue Prints", function()
+for i,v in pairs(game.ReplicatedStorage.Purchasables.Structures.BlueprintStructures:GetChildren()) do
+if not game.Players.LocalPlayer.PlayerBlueprints.Blueprints:FindFirstChild(v.Name) then
+local clone = v:Clone()
+clone.Parent = game.Players.LocalPlayer.PlayerBlueprints.Blueprints
+end
+end
+notify("Blue Prints","now Active")
+end, {animated = true,})
+ 
+  Settings:Create("Slider", "Max Zoom Distance", function(Value)
+  game.Players.LocalPlayer.CameraMaxZoomDistance = Value
+ 
+ 
+end, {min = 60, max = 10000, suffix = "Zoom", precise = false,default = 60})
+ 
+CarTools:Create("Button", "Car Rotater", function()
+    local Turn = game:GetService("Players").LocalPlayer:GetMouse()
+    function Turn2(key)
+            if (key == "r") then
+            function RotateCar()
+    if game.Players.LocalPlayer.Character then 
+        Character = game.Players.LocalPlayer.Character
+        if Character.Humanoid.SeatPart ~= nil then 
+            Car = Character.Humanoid.SeatPart.Parent
+            spawn(function()
+            local Pos = CFrame.new(Car.Main.Position)
+                for i=1,5 do
+                    wait()
+                    Car:SetPrimaryPartCFrame(Pos * CFrame.Angles(math.rad(Character.HumanoidRootPart.Orientation.x), math.rad(Character.HumanoidRootPart.Orientation.y), 0))
+                    game.ReplicatedStorage.Interaction.ClientRequestOwnership:FireServer(Car.Main)
+                    game.ReplicatedStorage.Interaction.ClientIsDragging:FireServer(Car.Main)
+                end
+            end)
+        end
+    end
+end
+RotateCar()
+            end
+        end
+Turn.KeyDown:connect(Turn2)
+end, {animated = true,})
+ 
+AxeTools:Create("Button", "Dupe Axes", function()
+if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("Humanoid") and game.Players.LocalPlayer.Character.Humanoid.Health > 0 then
+oldpos = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+ 
+local LP = game.Players.LocalPlayer
+local CFR = LP.Character.Head.CFrame * CFrame.new(0,5,0)
+ 
+if LP.Character:FindFirstChild("Tool") then
+  LP.Character.Tool.Parent = game.Players.LocalPlayer.Backpack
+end
+for a,b in pairs(LP.Character:GetChildren()) do
+  if b.ClassName == "Part" then
+    b:Destroy()
+  end
+end
+wait(.5)
+local ab1 = {}
+ 
+for a,b in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+  if b.Name == "Tool" and b.ClassName == "Tool" then
+ 
+    game.ReplicatedStorage.Interaction.ClientInteracted:FireServer(b, "Drop tool", CFR)
+    local Purchased
+    Purchased = game.Workspace.PlayerModels.ChildAdded:connect(function(new)
+    if new:WaitForChild("Owner").Value == game.Players.LocalPlayer then
+ 
+      table.insert(ab1,new)
+      Purchased:Disconnect()
+      return;
+    end
+ 
+    end)
+ 
+  end
+ 
+end
+ 
+repeat wait(.1)
+until LP.Character and LP.Character:FindFirstChild("Humanoid") and LP.Character.Humanoid.Health > 0 and LP.Character:FindFirstChild("Head")
+ 
+-- pick up
+teleport(oldpos)
+for a,b in pairs(ab1) do
+ 
+  if #game.Players.LocalPlayer.Backpack:GetChildren() < 9 then
+    game:GetService("ReplicatedStorage").Interaction.ClientInteracted:FireServer(b,"Pick up tool")
+    wait(0.2)
+    if LP.Character:FindFirstChild("Tool") then
+      LP.Character.Tool.Parent = game.Players.LocalPlayer.Backpack
+    end
+ 
+  end
+end
+end
+end, {animated = true,})
+
+Settings:Create("Button", "Destory Gui", function()
+
+game.CoreGui:FindFirstChild("UILib"):Destroy()
+
+    end, {animated = true,})
+
+Settings:Create("Button", "Rejoin Server", function()
+
+game:GetService("TeleportService"):Teleport(game.PlaceId, game:GetService("Players").LocalPlayer)
+
+    end, {animated = true,})
+
+Settings:Create("Button", "Leave Server", function()
+
+game.Players.LocalPlayer:Kick("Thank you for using Tactical Gui")
+
+    end, {animated = true,})
